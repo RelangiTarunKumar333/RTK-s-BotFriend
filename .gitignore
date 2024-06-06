@@ -1,0 +1,51 @@
+# Compiled Python files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+env/
+*.env
+
+# IDE specific
+.vscode/
+.idea/
+*.sublime-workspace
+
+# Logs and temp files
+*.log
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# Compiled binaries
+*.dll
+*.so
+*.dylib
+
+# Package files
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Coverage reports
+.coverage
+.coverage.*
+.pytest_cache/
+
+# Distribution directories
+.dist/
+*.dist-info/
+
+# Environment variables file
+.env
+
+# macOS specific files
+.DS_Store
+
+# Windows specific files
+Thumbs.db
