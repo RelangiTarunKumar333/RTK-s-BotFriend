@@ -1,7 +1,7 @@
 import os
 import tkinter as tk
 from tkinter import scrolledtext
-import requests
+from groq import Groq
 
 # Set the API key for Groq
 os.environ['GROQ_API_KEY'] = "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"
@@ -12,7 +12,7 @@ class ChatApp:
         self.root.title("Chat with Groq")
         self.root.geometry("600x700")
         self.root.configure(bg='#2c3e50')
-        
+
         # Unique Heading
         self.heading_frame = tk.Frame(root, bg='#34495e', pady=10)
         self.heading_frame.pack(fill=tk.X)
@@ -34,6 +34,9 @@ class ChatApp:
 
         self.add_message("Bot", "Hello! Let's chat.\nYou can type 'bye', 'exit', or 'end' to stop the conversation.")
 
+        # Initialize Groq client
+        self.client = Groq()
+
     def add_message(self, sender, message):
         self.chat_display.config(state=tk.NORMAL)
         self.chat_display.insert(tk.END, f"{sender}: {message}\n\n")
@@ -54,30 +57,20 @@ class ChatApp:
         self.add_message("Bot", response)
 
     def get_bot_response(self, message):
-        # Assuming the corrected endpoint URL
-        url = "https://api.groq.com/v1/engines/correct-engine-name/completions"  # Replace with the correct URL
-        headers = {
-            "Authorization": f"Bearer {os.getenv('GROQ_API_KEY')}",
-            "Content-Type": "application/json"
-        }
-        data = {
-            "messages": [
-                {"role": "user", "content": message}
-            ]
-        }
-
         try:
-            response = requests.post(url, headers=headers, json=data)
-            response.raise_for_status()  # Raise an error for bad responses
-            response_data = response.json()
-            print(response_data)  # Debugging: Print the response data
-            return response_data['choices'][0]['message']['content']
-        except requests.exceptions.RequestException as e:
+            chat_completion = self.client.chat.completions.create(
+                messages=[
+                    {
+                        "role": "user",
+                        "content": message,
+                    }
+                ],
+                model="llama3-8b-8192",
+            )
+            return chat_completion.choices[0].message.content
+        except Exception as e:
             print(f"Error: {e}")
             return f"Error: Unable to get response from Groq API. {e}"
-        except KeyError as e:
-            print(f"Response Key Error: {e}, Response Content: {response.content}")
-            return "Error: Invalid response format from Groq API."
 
 if __name__ == "__main__":
     root = tk.Tk()
